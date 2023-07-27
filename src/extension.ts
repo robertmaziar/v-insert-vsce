@@ -13,14 +13,36 @@ export function activate(context: vscode.ExtensionContext) {
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand
 	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('v-insert-vsce.helloWorld', () => {
+	let disposable = vscode.commands.registerCommand('v-insert-vsce.insertDateTimeVersionExcludingSeconds', () => {
 		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from V-insert!');
+		insertVersionDateTime(false);
+	});
+
+	let disposable2 = vscode.commands.registerCommand('v-insert-vsce.insertDateTimeVersionIncludingSeconds', () => {
+		// The code you place here will be executed every time your command is executed
+		insertVersionDateTime(true);
 	});
 
 	context.subscriptions.push(disposable);
+	context.subscriptions.push(disposable2);
 }
 
 // This method is called when your extension is deactivated
 export function deactivate() {}
+
+const zeroPad = (num: number, places: number = 2) => String(num).padStart(places, '0');
+
+function insertVersionDateTime(includeSeconds: boolean) {
+	const editor = vscode.window.activeTextEditor;
+	if (editor) {
+			editor.edit(editBuilder => {
+				const now = new Date();
+				let versionText = `${now.getFullYear()}${zeroPad(now.getMonth() + 1)}${zeroPad(now.getDate())}${zeroPad(now.getHours())}${zeroPad(now.getMinutes())}`;
+				if (includeSeconds) {
+					versionText += `${zeroPad(now.getSeconds())}`;
+				}
+
+				editBuilder.replace(editor.selection, versionText);
+			});
+	}
+}
