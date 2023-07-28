@@ -18,13 +18,12 @@ export function activate(context: vscode.ExtensionContext) {
 		insertVersionDateTime(false);
 	});
 
-	let disposable2 = vscode.commands.registerCommand('v-insert-vsce.insertDateTimeVersionIncludingSeconds', () => {
+	disposable = vscode.commands.registerCommand('v-insert-vsce.insertDateTimeVersionIncludingSeconds', () => {
 		// The code you place here will be executed every time your command is executed
 		insertVersionDateTime(true);
 	});
 
 	context.subscriptions.push(disposable);
-	context.subscriptions.push(disposable2);
 }
 
 // This method is called when your extension is deactivated
